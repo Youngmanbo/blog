@@ -65,3 +65,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 	# 사용자의 username field는 email으로 설정 (이메일로 로그인)
     USERNAME_FIELD = 'email'
+
+class UserProfile(models.Model):
+    # 사용자 프로필 모델
+    # CustomUserModel 과 1:1 관계로 연결
+    
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    profile_image = models.ImageField()
+    email = models.EmailField(max_length=30, blank=True, null=True)
+    github = models.CharField(max_length=30, blank=True, null=True)
+    
+    # 현 x 구 트위터 아이디 필드
+    social_x = models.CharField(max_length=30, blank=True, null=True)
+    
