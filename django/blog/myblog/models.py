@@ -54,7 +54,7 @@ class CustomUserManager(BaseUserManager):
 # AbstractBaseUser를 상속해서 유저 커스텀
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     
-    email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
+    email = models.EmailField(max_length=30, unique=True, null=False, blank=False, verbose_name="로그인 이메일")
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -71,10 +71,10 @@ class UserProfile(models.Model):
     # CustomUserModel 과 1:1 관계로 연결
     
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    profile_image = models.ImageField()
-    email = models.EmailField(max_length=30, blank=True, null=True)
-    github = models.CharField(max_length=30, blank=True, null=True)
+    profile_image = models.ImageField(verbose_name="프로필 이미지", null=True, blank=True)
+    email = models.EmailField(max_length=30, blank=True, null=True, verbose_name="개인 이메일")
+    github = models.CharField(max_length=30, blank=True, null=True, verbose_name="깃허브 아이디")
     
     # 현 x 구 트위터 아이디 필드
-    social_x = models.CharField(max_length=30, blank=True, null=True)
+    social_x = models.CharField(max_length=30, blank=True, null=True, verbose_name="X 아이디")
     
