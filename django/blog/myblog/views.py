@@ -83,6 +83,7 @@ class AuthAPIView(APIView):
     # 로그인
     def post(self, request):
         # 유저 인증
+        print(request)
         user = authenticate(
             email=request.data.get("email"), password=request.data.get("password")
         )

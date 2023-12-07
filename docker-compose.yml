@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  django:
+    build:
+      context: ./django
+    command: python myblog/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./django:/app
+    ports:
+      - "8000:8000"
+
+  nextjs:
+    build:
+      context: ./nextjs
+    volumes:
+      - ./nextjs:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - django
