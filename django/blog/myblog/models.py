@@ -78,3 +78,16 @@ class UserProfile(models.Model):
     # 현 x 구 트위터 아이디 필드
     social_x = models.CharField(max_length=30, blank=True, null=True, verbose_name="X 아이디")
     
+class Post(models.Model):
+    # 게시글 모델
+    
+    title = models.CharField(max_length=255)
+    writer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    is_publick = models.BooleanField(default=False)
+    content = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.title
+    
