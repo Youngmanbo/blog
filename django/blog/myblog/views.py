@@ -8,6 +8,8 @@ from .serializers import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from django.conf import settings
+from .models import Post
+
 
 class SignUpView(APIView):
 
@@ -123,3 +125,14 @@ class AuthAPIView(APIView):
         res.delete_cookie("access")
         res.delete_cookie("refresh")
         return res
+
+class PostView(APIView):
+    
+    # 포스트 전체 리스트
+    def get(self, request):
+        posts = Post.objects.all()
+        serializers = PostSerializer(posts, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        return

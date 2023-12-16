@@ -1,4 +1,4 @@
-from . models import CustomUser, UserProfile
+from . models import CustomUser, UserProfile, Post
 from rest_framework import serializers
 
 class UserProfileSerilaizer(serializers.ModelSerializer):
@@ -28,5 +28,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return user
     
     # CustomUser Instance가 존재할때 validated_data 값으로 필드를 수정
-    def update(self, validated_data:dict, instance) -> CustomUser:
+    def update(self, validated_data:dict, instance:CustomUser) -> CustomUser:
         pass
+
+class PostSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Post
+        fields = '__all__'
