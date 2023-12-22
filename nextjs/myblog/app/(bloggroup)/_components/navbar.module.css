@@ -1,0 +1,31 @@
+.navContainer{
+    display:flex;
+    align-items:center;
+    padding-bottom:5px;
+    padding-top:5px;
+    border-bottom: groove 1px;
+    height: 60px;   
+    
+}
+.leftSectionWraper{
+    display:flex;
+    flex-grow:1;
+}
+.rightSectionWraper{
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow:1;
+}
+.search{
+    width:40px;
+}
+.loginBtn{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 1px;
+    border-radius:15px;
+    width:150px;
+    height:40px;
+}

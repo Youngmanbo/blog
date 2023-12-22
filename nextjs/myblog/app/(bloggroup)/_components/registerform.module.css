@@ -1,0 +1,69 @@
+.modal{
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.4);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;   
+}
+.container{
+    background: #ffffff;
+    position: relative;
+    top: 15%;
+    max-width: 80vw;
+    min-width: 600px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+}
+.formContainer{
+    width:600px;
+    gap:10px;
+
+}
+.formContainer h1{
+    text-align: center;
+}
+.modalHeader{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.closeBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:40px;
+    height:40px;
+}
+.modalBody{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.inputBox{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.inputBox label{
+    width:150px;
+}
+.alert{
+    color:red;
+}
+.inputbox input {
+    text-indent: 35%;
+    width:200px;
+    border-bottom: 1px thick;
+}
+.email input:focus { outline:none; }
+.submitBtn{
+    width:150px;
+}
