@@ -8,7 +8,8 @@ from .serializers import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from django.conf import settings
-from .models import Post
+from .models import Post, CustomUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class SignUpView(APIView):
@@ -50,6 +51,7 @@ class AuthAPIView(APIView):
     # 토큰으로부터 사용자 정보 가져오기
     def _get_user_from_token(self, access_token):
         payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
+        print(payload)
         user_id = payload.get('user_id')
         return get_object_or_404(CustomUser, pk=user_id)
 
@@ -70,7 +72,10 @@ class AuthAPIView(APIView):
     # 유저 정보 확인
     def get(self, request):
         try:
+            print(request)
             access_token = request.COOKIES.get('access')
+            payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
+            print(payload)
             user = self._get_user_from_token(access_token)
             serializer = CustomUserSerializer(instance=user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -80,12 +85,11 @@ class AuthAPIView(APIView):
 
         except jwt.exceptions.InvalidTokenError:
             # 사용 불가능한 토큰일 때
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"invalid token"},status=status.HTTP_400_BAD_REQUEST)
     
     # 로그인
     def post(self, request):
         # 유저 인증
-        print(request)
         user = authenticate(
             email=request.data.get("email"), password=request.data.get("password")
         )
@@ -128,11 +132,24 @@ class AuthAPIView(APIView):
 
 class PostView(APIView):
     
+    # get 요청시 누구나 허용 post 요청시 로그인된 사용자만 가능
+    permission_classes = [IsAuthenticatedOrReadOnly]
     # 포스트 전체 리스트
     def get(self, request):
         posts = Post.objects.all()
         serializers = PostSerializer(posts, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
     
+    # 글쓰기 요청
     def post(self, request):
-        return
+
+        try:
+            print(request.headers)
+            serializer = PostSerializer(data=request.data)
+            if serializer.is_valid():
+                post = serializer.save(writer=request.user)
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"unexpected error":str(e)}, status=status.HTTP_400_BAD_REQUEST)

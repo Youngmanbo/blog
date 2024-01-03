@@ -13,3 +13,6 @@ def validate_password(password: str) -> str:
 
     # 유효한 경우 "" 반환
     return ""
+
+def validate_postdata(data:dict) -> dict:
+    pass

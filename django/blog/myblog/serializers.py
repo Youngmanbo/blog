@@ -16,7 +16,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         email = validated_data.pop('email', None)
         password = validated_data.pop('password', None)
         profile_data = validated_data.pop('profile', None)  # profile 정보 추출
-        user = CustomUser.create_user(
+        user = CustomUser.objects.create_user(
             email=email,
             password=password,
             **validated_data
@@ -32,7 +32,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         pass
 
 class PostSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Post
         fields = '__all__'
