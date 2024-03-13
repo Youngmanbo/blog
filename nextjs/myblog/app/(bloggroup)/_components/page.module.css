@@ -1,0 +1,12 @@
+.container{
+    display:grid;
+    grid-template-columns: repeat(4, 300px);
+    grid-gap:60px;
+    place-items: center center;
+    place-content: center center;
+    margin-top:15px;
+}
+.container a{
+    text-decoration: none;
+    color:black;
+}

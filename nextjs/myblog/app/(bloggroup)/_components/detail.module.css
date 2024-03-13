@@ -1,0 +1,34 @@
+.container{
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:30px;
+}
+.content{
+    width:800px;
+    min-height: 400px;
+}
+.content img{
+    width:100%;
+}
+.userInfo{
+    width:800px;
+    border-bottom: groove 1px;
+}
+.comment{
+    display: flex;
+    flex-direction: column;
+    width:800px;
+    align-items:end;
+    height:400px;
+    gap:10px;
+}
+.comment > textarea{
+    width:100%;
+    height:100px;
+    padding:10px;
+}
+.comment > button{
+    width:100px;
+}

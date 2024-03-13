@@ -1,7 +1,7 @@
 "use client"
-import Modal from "../_components/Modal";
-import LoginForm from "../_components/LoginForm";
-import RegisterForm from "../_components/RegisterForm";
+import Modal from '../../_components/Modal';
+import LoginForm from '../../_components/LoginForm';
+import RegisterForm from '../../_components/RegisterForm';
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 

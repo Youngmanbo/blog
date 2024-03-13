@@ -2,40 +2,52 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
 import axios from "axios";
-import Route from "react";
+import { signIn } from "next-auth/react";
+import styles from "./loginForm.module.css";
+import Link from "next/link";
 
-const LoginForm = () => {
+const LoginForm = (probs) => {
     const { register, handleSubmit } = useForm();
     const router = useRouter();
+    const setIsLoginForm = probs.state;
+
     const onSubmit = async (data) => {
-        const baseUrl = "https://api.ymlog/api/auth/";
-        const baseLocalUrl = "http://localhost:8000/api/auth/";
-        try {
-            const response = await axios.post(baseLocalUrl, {
-                email: data.id,
-                password: data.pw
-            },
-            );
-            if (response.status !== 200) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+        let isRedirect = false;
+        try{
+            const response = await signIn("credentials",{
+            username:data.id,
+            password:data.pw,
+            redirect:false,
+            })
+
+            if(response?.ok){
+                isRedirect = true;
             }
-            const responseData = response.data; 
-            router.push("/");
-        } catch (error) {
-            alert(error.message);
+
+
+        }catch(err){
+            console.log(err);
+        }
+        if(isRedirect){
+            router.back();
         }
     };
+    const onClick = (e) => {
+        e.preventDefault()
+        setIsLoginForm(false)
+
+    }
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <h1>로그인</h1>
-            <div>
-                <input {...register("id")} type='email' placeholder="이메일을 입력해주세요" required />
-            </div>
-            <div>
-                <input {...register("pw")} type='password' placeholder="비밀번호를 입력해주세요" required />
-            </div>
-            <input type='submit' />
-        </form>
+            <form className={styles.container} onSubmit={handleSubmit(onSubmit)}>
+                <h1>로그인</h1>
+                <input {...register("id")} type='email' placeholder="Email" required />
+
+                <input {...register("pw")} type='password' placeholder="PassWord" required />
+                <div className={styles.btnContainer}>
+                    <input className={styles.submit} type='submit' value='로그인'/>
+                    <div className={styles.link} onClick={onClick}>회원가입</div>
+                </div>
+            </form>
     );
 };
 

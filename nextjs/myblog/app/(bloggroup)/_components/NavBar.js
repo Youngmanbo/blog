@@ -4,10 +4,13 @@ import styles from "./navbar.module.css";
 import {userState} from "../_lib/atoms";
 import {useRecoilValue} from "recoil";
 import { useEffect } from 'react';
+import { useSession } from "next-auth/react";
+import LoginBtn from './LoginButton';
+import LoginCompleted from './LoginCompleted';
 
 export default function NavBar() {
-
-
+    const { data:session, status } = useSession()
+    console.log(session);
     return(
         <header className={styles.navContainer}>
           <div className={styles.leftSectionWraper}>
@@ -17,7 +20,9 @@ export default function NavBar() {
             <div className={styles.itemWraper}>
               <div className={styles.search}>
               </div>
-              <Link href="/register/" className={styles.loginBtn}>로그인</Link>
+              {status==='authenticated'?
+                <LoginCompleted session={session}></LoginCompleted>:
+                <LoginBtn className={styles.loginBtn}></LoginBtn>}
             </div>
           </div>
         </header>

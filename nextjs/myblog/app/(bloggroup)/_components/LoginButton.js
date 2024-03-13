@@ -1,5 +1,9 @@
-export default function LoginBtn(){
+"use client";
+import Link from "next/link";
+
+export default function LoginBtn(probs){
+
     return (
-        <div></div>
+        <Link href="/login" className={probs.className}>로그인</Link>
     )
 }

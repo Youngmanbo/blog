@@ -11,4 +11,6 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path("post/", PostView.as_view(), name='post_view'),
+    path("post/<int:pk>/", PostView.as_view(), name="post_detail"),
+    path("comment/<int:post_id>/", CommentView.as_view(), name="comment")
 ]

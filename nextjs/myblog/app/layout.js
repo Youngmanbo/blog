@@ -1,15 +1,13 @@
-"use client";
-import {RecoilRoot} from "recoil";
 import "./global.css";
-
+import AuthSession from "./_components/AuthSession";
 
 export default function RootLayout({children}) {
  return (
       <html>
         <body>
-          <RecoilRoot>
-            {children}
-          </RecoilRoot>
+          <AuthSession>
+              {children}
+          </AuthSession>
         </body>
       </html>
   )

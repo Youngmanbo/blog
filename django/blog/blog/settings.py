@@ -196,12 +196,8 @@ SIMPLE_JWT = {
 
 # cors 설정
 # 허용 도메인
-CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:3000', 
-    'http://localhost:3000', 
-    'https://ymlog.site', 
-    'https://api.ymlog.site',
-    ]
+CORS_ORIGIN_ALLOW_ALL=True # <- 모든 호스트 허용
+CORS_ALLOW_CREDENTIALS = True # <-쿠키가 cross-site HTTP 요청에 포함될 수 있다
 
 #HTTP methods 추가
 CORS_ALLOW_METHODS = (

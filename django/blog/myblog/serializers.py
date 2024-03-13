@@ -1,5 +1,6 @@
-from . models import CustomUser, UserProfile, Post
+from . models import CustomUser, UserProfile, Post, Comment
 from rest_framework import serializers
+from django.db.models import Count, Prefetch
 
 class UserProfileSerilaizer(serializers.ModelSerializer):
     class Meta:
@@ -7,9 +8,14 @@ class UserProfileSerilaizer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True) 
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = [
+            'email',
+            'id', 
+            'password'
+        ]
     
     # CustomUser 모델의 create_user 메서드를 사용하여 새로운 사용자 생성
     def create(self, validated_data:dict) -> CustomUser:
@@ -32,6 +38,40 @@ class CustomUserSerializer(serializers.ModelSerializer):
         pass
 
 class PostSerializer(serializers.ModelSerializer):
+    writer_email = serializers.EmailField(source='writer.email', read_only=True)
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = [
+            'title', 
+            'writer_email', 
+            'is_publick', 
+            'content', 
+            'created_at', 
+            'updated_at', 
+            'id'
+        ]
+        
+class CommentSerializer(serializers.ModelSerializer):
+    writer_email = serializers.EmailField(source='writer.email', read_only=True)
+    child_comment = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Comment
+        fields = [
+            'id',
+            'content',
+            'post',
+            'parrent_comment',
+            'created_at',
+            'updated_at',
+            'writer_email',
+            'child_comment'
+        ]
+    
+    def get_child_comment(self, obj):
+        children = Comment.objects.filter(parent_comment=obj).annotate(num_children=Count('id')).prefetch_related('child_comments')
+        serialized_children = []
+        for child in children:
+            serialized_child = CommentSerializer(child).data
+            serialized_children.append(serialized_child)
+        return serialized_children

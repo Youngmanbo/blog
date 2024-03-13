@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from . utils import validate_password
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -90,4 +91,15 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+
+class Comment(models.Model):
+    # 댓글 모델
+    
+    content = models.TextField(blank=True)
+    writer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    parrent_comment = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     

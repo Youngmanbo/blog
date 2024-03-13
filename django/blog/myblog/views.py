@@ -135,7 +135,14 @@ class PostView(APIView):
     # get 요청시 누구나 허용 post 요청시 로그인된 사용자만 가능
     permission_classes = [IsAuthenticatedOrReadOnly]
     # 포스트 전체 리스트
-    def get(self, request):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                queryset = Post.objects.get(id=pk)
+                serializers = PostSerializer(queryset)
+                return Response(serializers.data, status=status.HTTP_200_OK)
+            except Post.DoesNotExist:
+                return Response(f"{pk} post does not exist",status=status.HTTP_404_OK)
         posts = Post.objects.all()
         serializers = PostSerializer(posts, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
@@ -144,7 +151,6 @@ class PostView(APIView):
     def post(self, request):
 
         try:
-            print(request.headers)
             serializer = PostSerializer(data=request.data)
             if serializer.is_valid():
                 post = serializer.save(writer=request.user)
@@ -153,3 +159,23 @@ class PostView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"unexpected error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class CommentView(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def get(self, request, post_id=None):
+
+        if post_id is not None:
+            try:
+                comments = Comment.objects.filter(parrent_comment=None, post=post_id).annotate(num_children=Count('child_comments')).prefetch_related(Prefetch('child_comments', queryset=Comment.objects.prefetch_related('child_comments')))
+                serializers = CommentSerializer(comments)
+                return Response(serializers.data, status=status.HTTP_200_OK)
+            except Comment.DoesNotExist:
+                return Response(f"{post_id} Post Comments Does not exist", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+            
+    def post(self, request, post_id):
+        pass    
+        
