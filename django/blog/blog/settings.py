@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'myblog',
     
     # 설치한 라이브러리
+    'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',

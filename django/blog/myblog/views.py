@@ -8,8 +8,9 @@ from .serializers import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from django.conf import settings
-from .models import Post, CustomUser
+from .models import Post, CustomUser, Comment
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets
 
 
 class SignUpView(APIView):
@@ -179,3 +180,15 @@ class CommentView(APIView):
     def post(self, request, post_id):
         pass    
         
+class CommentTestView(viewsets.ModelViewSet):
+    """_summary_
+
+    Args:
+        viewsets (_type_): _description_
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_fields = 'post'
+    
+    
