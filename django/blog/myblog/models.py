@@ -98,7 +98,7 @@ class Comment(models.Model):
     content = models.TextField(blank=True)
     writer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    parrent_comment = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
+    parrent_comment = models.ForeignKey("self", related_name='reply', on_delete=models.CASCADE,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
