@@ -11,6 +11,7 @@ from django.conf import settings
 from .models import Post, CustomUser, Comment
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import viewsets
+from rest_framework.decorators import action
 
 
 class SignUpView(APIView):
@@ -189,6 +190,18 @@ class CommentTestView(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    lookup_fields = 'post'
+    lookup_field = 'post'
     
+    def perform_create(self, serializer):
+        serializer.save(writer=self.request.user)
+        
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
+    @action(detail=True, methods=['get'])
+    def get_post_comment(self, request, post=None):
+        if post is not None:
+            comments = Comment.objects.filter(post=post, parrent_comment=None)
+            serializer = CommentSerializer(comments, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
