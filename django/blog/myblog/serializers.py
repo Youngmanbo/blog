@@ -53,7 +53,7 @@ class PostSerializer(serializers.ModelSerializer):
         
 class CommentSerializer(serializers.ModelSerializer):
     writer_email = serializers.EmailField(source='writer.email', read_only=True)
-    child_comment = serializers.SerializerMethodField()
+    child_comments = serializers.SerializerMethodField()
     
     class Meta:
         model = Comment
@@ -65,13 +65,10 @@ class CommentSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'writer_email',
-            'child_comment'
+            'child_comments'
         ]
     
-    def get_child_comment(self, obj):
-        children = Comment.objects.filter(parent_comment=obj).annotate(num_children=Count('id')).prefetch_related('child_comments')
-        serialized_children = []
-        for child in children:
-            serialized_child = CommentSerializer(child).data
-            serialized_children.append(serialized_child)
-        return serialized_children
+    def get_child_comments(self, instance):
+        serializer = self.__class__(instance.reply, many=True)
+        serializer.bind('', self)
+        return serializer.data

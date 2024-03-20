@@ -161,25 +161,7 @@ class PostView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"unexpected error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-class CommentView(APIView):
-
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    
-    def get(self, request, post_id=None):
-
-        if post_id is not None:
-            try:
-                comments = Comment.objects.filter(parrent_comment=None, post=post_id).annotate(num_children=Count('child_comments')).prefetch_related(Prefetch('child_comments', queryset=Comment.objects.prefetch_related('child_comments')))
-                serializers = CommentSerializer(comments)
-                return Response(serializers.data, status=status.HTTP_200_OK)
-            except Comment.DoesNotExist:
-                return Response(f"{post_id} Post Comments Does not exist", status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-            
-    def post(self, request, post_id):
-        pass    
+  
         
 class CommentTestView(viewsets.ModelViewSet):
     """_summary_
