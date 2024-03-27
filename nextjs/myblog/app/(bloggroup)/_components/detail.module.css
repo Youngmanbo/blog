@@ -20,8 +20,8 @@
     display: flex;
     flex-direction: column;
     width:800px;
-    align-items:end;
-    height:400px;
+    align-items:flex-end;
+    height:150px;
     gap:10px;
 }
 .comment > textarea{
@@ -31,4 +31,7 @@
 }
 .comment > button{
     width:100px;
+}
+.commentContainer{
+    width:800px;
 }
