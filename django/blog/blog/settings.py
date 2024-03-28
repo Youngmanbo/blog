@@ -219,3 +219,20 @@ CORS_ALLOW_HEADERS = (
 "x-csrftoken",
 "x-requested-with",
 )
+
+#swagger settings
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description':'JWT_ACCESS_TOKEN'
+            
+        }
+    },
+    'SECURITY_REQUIREMENTS': [{
+        'Bearer': []
+    }]
+}
